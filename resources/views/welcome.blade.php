@@ -132,61 +132,187 @@
 <body class="bg-neutral font-sans antialiased">
 
     <!-- Top Bar - jarak icon rapi -->
-    <div class="bg-primary text-white text-xs md:text-sm py-3 px-4 border-b border-white/10 shadow-sm">
-        <div class="container mx-auto flex flex-wrap justify-between items-center gap-3">
-            <div class="flex flex-wrap items-center gap-4 md:gap-6">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-phone-flip w-4 text-accent"></i> <span>+62 812 3456 7890</span></span>
-                <span class="flex items-center gap-2"><i class="fa-regular fa-envelope w-4 text-accent"></i> <span>ppdb@sman1batanggasan.sch.id</span></span>
-                <span class="flex items-center gap-2 hidden sm:flex"><i class="fa-regular fa-clock w-4 text-accent"></i> <span>Senin - Jumat, 07.30 - 16.00</span></span>
-            </div>
-            <div class="flex gap-4 text-sm">
-                <a href="#" class="hover:text-accent transition-all hover:scale-110"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="hover:text-accent transition-all hover:scale-110"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="#" class="hover:text-accent transition-all hover:scale-110"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#" class="hover:text-accent transition-all hover:scale-110"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#" class="hover:text-accent transition-all hover:scale-110"><i class="fa-brands fa-whatsapp"></i></a>
-            </div>
+    <!-- Top Bar -->
+<div class="bg-primary text-white text-xs md:text-sm py-3 px-4 border-b border-white/10 shadow-sm">
+    <div class="container mx-auto flex flex-wrap justify-between items-center gap-3">
+        <div class="flex flex-wrap items-center gap-4 md:gap-6">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-phone-flip w-4 text-accent"></i> <span>+62 812 3456 7890</span></span>
+            <span class="flex items-center gap-2"><i class="fa-regular fa-envelope w-4 text-accent"></i> <span>ppdb@sman1batanggasan.sch.id</span></span>
+            <span class="flex items-center gap-2 hidden sm:flex"><i class="fa-regular fa-clock w-4 text-accent"></i> <span>Senin - Jumat, 07.30 - 16.00</span></span>
+        </div>
+        <div class="flex gap-4 text-sm">
+            <a href="https://www.instagram.com/" target="_blank" class="hover:text-accent transition-all hover:scale-110" aria-label="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/" target="_blank" class="hover:text-accent transition-all hover:scale-110" aria-label="TikTok">
+                <i class="fa-brands fa-tiktok"></i>
+            </a>
+            <a href="https://www.youtube.com/" target="_blank" class="hover:text-accent transition-all hover:scale-110" aria-label="YouTube">
+                <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="https://www.facebook.com/" target="_blank" class="hover:text-accent transition-all hover:scale-110" aria-label="Facebook">
+                <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://wa.me/6281234567890" target="_blank" class="hover:text-accent transition-all hover:scale-110" aria-label="WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
         </div>
     </div>
+</div>
 
-    <!-- Header -->
-    <header class="bg-white/95 backdrop-blur-sm sticky top-0 z-30 shadow-md border-b border-gray-100">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between flex-wrap">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 md:w-12 md:h-12 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-md">
-                    <i class="fa-solid fa-graduation-cap text-white text-xl md:text-2xl"></i>
-                </div>
-                <div class="leading-tight">
-                    <h1 class="text-base md:text-xl font-extrabold text-primary tracking-tight">SMAN 1 BATANG GASAN</h1>
-                    <p class="text-[11px] md:text-xs text-gray-500 font-medium">Unggul, Berkarakter, Berwawasan Global</p>
-                </div>
+<!-- Header -->
+<header class="bg-white/95 backdrop-blur-sm sticky top-0 z-30 shadow-md border-b border-gray-100">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between flex-wrap">
+        <!-- Logo dan Nama Sekolah -->
+        <a href="{{ url('/') }}" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <div class="w-11 h-11 md:w-12 md:h-12 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-graduation-cap text-white text-xl md:text-2xl"></i>
             </div>
-            <div class="hidden md:flex items-center gap-1">
-                <a href="#" class="px-3 py-2 text-dark font-semibold text-sm hover:text-primary transition border-b-2 border-transparent hover:border-accent">Beranda</a>
-                <a href="#" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Profil</a>
-                <a href="#" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Akademik</a>
-                <a href="#" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Kesiswaan</a>
-                <a href="#" class="px-3 py-2 text-accent font-bold text-sm border-b-2 border-accent bg-amber-50/30 rounded-t-lg">PPDB 2026</a>
-                <a href="#" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Berita</a>
-                <a href="#" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Kontak</a>
-                <a href="/login" class="ml-3 px-4 py-1.5 bg-primary text-white text-sm rounded-full shadow-md hover:bg-secondary transition-all flex items-center gap-2"><i class="fa-regular fa-user"></i> Login</a>
+            <div class="leading-tight">
+                <h1 class="text-base md:text-xl font-extrabold text-primary tracking-tight">SMAN 1 BATANG GASAN</h1>
+                <p class="text-[11px] md:text-xs text-gray-500 font-medium">Unggul, Berkarakter, Berwawasan Global</p>
             </div>
-            <button class="md:hidden text-primary text-2xl focus:outline-none" id="menu-toggle">
-                <i class="fa-solid fa-bars-staggered"></i>
-            </button>
+        </a>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center gap-1">
+            <a href="{{ url('/') }}" class="px-3 py-2 text-dark font-semibold text-sm hover:text-primary transition border-b-2 border-transparent hover:border-accent">Beranda</a>
+            <a href="{{ url('/profil') }}" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Profil</a>
+            <a href="{{ url('/akademik') }}" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Akademik</a>
+            <a href="{{ url('/kesiswaan') }}" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Kesiswaan</a>
+            <a href="{{ url('/ppdb') }}" class="px-3 py-2 text-accent font-bold text-sm border-b-2 border-accent bg-amber-50/30 rounded-t-lg">PPDB 2026</a>
+            <a href="{{ url('/berita') }}" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Berita</a>
+            <a href="{{ url('/kontak') }}" class="px-3 py-2 text-gray-600 text-sm hover:text-primary transition">Kontak</a>
+            
+            @auth
+                <!-- Jika sudah login -->
+                @if(Auth::user()->role == 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="ml-3 px-4 py-1.5 bg-primary text-white text-sm rounded-full shadow-md hover:bg-secondary transition-all flex items-center gap-2">
+                        <i class="fa-regular fa-user"></i> Dashboard
+                    </a>
+                @elseif(Auth::user()->role == 'siswa')
+                    <a href="{{ route('siswa.dashboard') }}" class="ml-3 px-4 py-1.5 bg-primary text-white text-sm rounded-full shadow-md hover:bg-secondary transition-all flex items-center gap-2">
+                        <i class="fa-regular fa-user"></i> Dashboard
+                    </a>
+                @elseif(Auth::user()->role == 'kepala')
+                    <a href="{{ route('kepala.dashboard') }}" class="ml-3 px-4 py-1.5 bg-primary text-white text-sm rounded-full shadow-md hover:bg-secondary transition-all flex items-center gap-2">
+                        <i class="fa-regular fa-user"></i> Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="ml-3 px-4 py-1.5 bg-primary text-white text-sm rounded-full shadow-md hover:bg-secondary transition-all flex items-center gap-2">
+                        <i class="fa-regular fa-user"></i> Login
+                    </a>
+                @endif
+            @else
+                <!-- Jika belum login -->
+                <a href="{{ route('login') }}" class="ml-3 px-4 py-1.5 bg-primary text-white text-sm rounded-full shadow-md hover:bg-secondary transition-all flex items-center gap-2">
+                    <i class="fa-regular fa-user"></i> Login
+                </a>
+            @endauth
         </div>
-        <div class="md:hidden hidden bg-white border-t border-gray-100 shadow-inner" id="mobile-menu">
-            <div class="container mx-auto px-4 py-4 flex flex-col gap-2">
-                <a href="#" class="py-3 px-3 font-semibold text-gray-700 hover:bg-gray-50 rounded-xl">Beranda</a>
-                <a href="#" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Profil</a>
-                <a href="#" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Akademik</a>
-                <a href="#" class="py-3 px-3 text-accent font-bold bg-amber-50 rounded-xl">PPDB 2026</a>
-                <a href="#" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Berita</a>
-                <a href="#" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Galeri</a>
-                <a href="/login" class="py-3 px-3 text-white bg-primary text-center rounded-full mt-2 flex items-center justify-center gap-2"><i class="fa-regular fa-user"></i> Login PPDB</a>
-            </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="md:hidden text-primary text-2xl focus:outline-none" id="menu-toggle" aria-label="Menu">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+    </div>
+    
+    <!-- Mobile Menu Drawer -->
+    <div class="md:hidden hidden bg-white border-t border-gray-100 shadow-inner" id="mobile-menu">
+        <div class="container mx-auto px-4 py-4 flex flex-col gap-2">
+            <a href="{{ url('/') }}" class="py-3 px-3 font-semibold text-gray-700 hover:bg-gray-50 rounded-xl">Beranda</a>
+            <a href="{{ url('/profil') }}" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Profil</a>
+            <a href="{{ url('/akademik') }}" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Akademik</a>
+            <a href="{{ url('/kesiswaan') }}" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Kesiswaan</a>
+            <a href="{{ url('/ppdb') }}" class="py-3 px-3 text-accent font-bold bg-amber-50 rounded-xl">PPDB 2026</a>
+            <a href="{{ url('/berita') }}" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Berita</a>
+            <a href="{{ url('/kontak') }}" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Kontak</a>
+            <a href="{{ url('/galeri') }}" class="py-3 px-3 text-gray-600 hover:bg-gray-50 rounded-xl">Galeri</a>
+            
+            @auth
+                @if(Auth::user()->role == 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="py-3 px-3 text-white bg-primary text-center rounded-full mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-user"></i> Dashboard Admin
+                    </a>
+                @elseif(Auth::user()->role == 'siswa')
+                    <a href="{{ route('siswa.dashboard') }}" class="py-3 px-3 text-white bg-primary text-center rounded-full mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-user"></i> Dashboard Siswa
+                    </a>
+                @elseif(Auth::user()->role == 'kepala')
+                    <a href="{{ route('kepala.dashboard') }}" class="py-3 px-3 text-white bg-primary text-center rounded-full mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-user"></i> Dashboard Kepala
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="py-3 px-3 text-white bg-primary text-center rounded-full mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-user"></i> Login
+                    </a>
+                @endif
+                
+                <!-- Tombol Logout untuk mobile -->
+                <form action="{{ route('logout') }}" method="POST" class="mt-2">
+                    @csrf
+                    <button type="submit" class="w-full py-3 px-3 text-white bg-red-500 text-center rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 transition">
+                        <i class="fa-solid fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="py-3 px-3 text-white bg-primary text-center rounded-full mt-2 flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-user"></i> Login PPDB
+                </a>
+                <a href="{{ route('register') }}" class="py-3 px-3 text-primary bg-amber-50 text-center rounded-xl mt-2 flex items-center justify-center gap-2 border border-accent">
+                    <i class="fa-regular fa-user-plus"></i> Daftar
+                </a>
+            @endauth
         </div>
-    </header>
+    </div>
+</header>
+
+<script>
+    // Mobile menu toggle functionality
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            // Toggle icon between bars and times
+            const icon = this.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars-staggered');
+            } else {
+                icon.classList.remove('fa-bars-staggered');
+                icon.classList.add('fa-times');
+            }
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars-staggered');
+                }
+            }
+        });
+    }
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && href !== '#!' && href !== '#0') {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+</script>
 
     <!-- HERO SECTION -->
     <section class="relative overflow-hidden">

@@ -59,32 +59,36 @@ Route::middleware(['auth', 'siswa'])->prefix('siswa')->name('siswa.')->group(fun
         return view('siswa.ppdb.persyaratan');
     })->name('ppdb.persyaratan');
     
-    // Formulir Pendaftaran PPDB (Resource-like routes)
+    // Formulir Pendaftaran PPDB
     Route::prefix('pendaftaran-ppdb')->name('ppdb.')->group(function () {
         Route::get('/', [PPDBController::class, 'index'])->name('index');
         Route::get('/form', [PPDBController::class, 'create'])->name('form');
         Route::post('/store', [PPDBController::class, 'store'])->name('store');
         Route::get('/cetak', [PPDBController::class, 'cetak'])->name('cetak');
+        Route::get('/edit/{id}', [PPDBController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [PPDBController::class, 'update'])->name('update');
     });
     
-    // Dokumen Siswa
+    // Dokumen Siswa (DIPERBAIKI - menggunakan parameter yang konsisten)
     Route::prefix('dokumen')->name('dokumen.')->group(function () {
         Route::get('/', [DokumenController::class, 'index'])->name('index');
         Route::get('/{user_id}/{tipe}', [DokumenController::class, 'show'])->name('show');
         Route::get('/{user_id}/edit', [DokumenController::class, 'edit'])->name('edit');
         Route::put('/update/{user_id}', [DokumenController::class, 'update'])->name('update');
+        Route::delete('/destroy/{user_id}', [DokumenController::class, 'destroy'])->name('destroy');
     });
     
     // Status Pendaftaran
     Route::get('/status-pendaftaran', [PendaftaranController::class, 'index'])->name('statusPendaftaran.index');
     
-    // Profil Siswa
+    // Profil Siswa (DIPERBAIKI - konsistensi parameter)
     Route::prefix('profil')->name('profil.')->group(function () {
         Route::get('/', [ProfilController::class, 'index'])->name('index');
-        Route::put('/update/{id}', [ProfilController::class, 'update'])->name('update');
-        Route::put('/update-dokumen/{user_id}', [ProfilController::class, 'updateDokumen'])->name('updateDokumen');
+        Route::put('/update', [ProfilController::class, 'update'])->name('update');
+        Route::put('/update-dokumen', [ProfilController::class, 'updateDokumen'])->name('updateDokumen');
     });
 });
+
 
 // ==================== ROUTE ADMIN ====================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

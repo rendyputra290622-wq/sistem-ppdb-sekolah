@@ -96,6 +96,18 @@
             box-shadow: 0 1px 0 #B45309;
         }
         
+        .btn-back {
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .btn-back:active {
+            transform: translateY(1px);
+        }
+        
         /* Efek focus pada input */
         .input-focus:focus {
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
@@ -171,6 +183,15 @@
         
         {{-- Card Login Modern --}}
         <div class="glass-card rounded-3xl shadow-2xl max-w-md w-full animate-slide-up overflow-hidden">
+            
+            {{-- Tombol Kembali ke Beranda --}}
+            <div class="absolute top-4 left-4 z-20">
+                <a href="{{ route('home') }}" class="btn-back flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm text-white text-sm rounded-xl hover:bg-white/30 transition-all duration-300 group">
+                    <i class="fa-solid fa-arrow-left text-accent group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="hidden sm:inline">Kembali</span>
+                    <span class="sm:hidden"><i class="fa-solid fa-house"></i></span>
+                </a>
+            </div>
             
             {{-- Header dengan logo sekolah --}}
             <div class="bg-gradient-to-r from-primary to-secondary px-6 py-6 text-center">
@@ -330,6 +351,19 @@
         
         // Auto focus pada input email saat halaman dimuat
         document.getElementById('email')?.focus();
+        
+        // Smooth hover effect untuk tombol kembali
+        const backBtn = document.querySelector('.btn-back');
+        if (backBtn) {
+            backBtn.addEventListener('mouseenter', () => {
+                const icon = backBtn.querySelector('i');
+                if (icon) icon.style.transform = 'translateX(-3px)';
+            });
+            backBtn.addEventListener('mouseleave', () => {
+                const icon = backBtn.querySelector('i');
+                if (icon) icon.style.transform = 'translateX(0)';
+            });
+        }
     </script>
 </body>
 

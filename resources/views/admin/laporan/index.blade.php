@@ -5,10 +5,11 @@
 
 @section('content')
 <style>
-    /* Custom styles untuk laporan */
+    /* Custom styles untuk laporan - Modern & Responsif */
     .stat-card {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 20px;
+        cursor: pointer;
     }
     .stat-card:hover {
         transform: translateY(-4px);
@@ -93,7 +94,7 @@
         background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%);
     }
     
-    /* Print styles */
+    /* Print styles - Laporan resmi bersih */
     @media print {
         body * {
             visibility: hidden;
@@ -107,7 +108,7 @@
             left: 0;
             width: 100%;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             background: white;
         }
         .no-print {
@@ -117,15 +118,29 @@
             display: none !important;
         }
         .laporan-table th, .laporan-table td {
-            border: 1px solid #ddd !important;
+            border: 1px solid #000 !important;
+            color: black !important;
+        }
+        .laporan-table th {
+            background: #e0e0e0 !important;
+            color: black !important;
+            font-weight: bold !important;
         }
         .badge-status {
-            border: none;
-            padding: 2px 8px;
+            border: 1px solid #000 !important;
+            background: transparent !important;
+            color: black !important;
+            box-shadow: none !important;
         }
         @page {
             size: landscape;
             margin: 1.5cm;
+        }
+        .text-primary, .text-accent {
+            color: black !important;
+        }
+        hr {
+            border-color: black !important;
         }
     }
     
@@ -157,6 +172,7 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             background: white;
+            border: 1px solid #e5e7eb;
         }
         .laporan-table tbody td {
             display: flex;
@@ -177,13 +193,53 @@
         .laporan-table tbody td:last-child {
             border-bottom: none;
         }
+        .badge-status {
+            font-size: 10px;
+            padding: 3px 8px;
+        }
+    }
+    
+    /* Loading animation */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+        margin-right: 8px;
+    }
+    
+    /* Editable field */
+    .editable-field {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 8px;
+    }
+    .editable-field:hover {
+        background: rgba(245, 158, 11, 0.1);
+        text-decoration: underline;
+    }
+    .edit-input {
+        border: 1px solid #F59E0B;
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
     }
 </style>
 
 <div class="space-y-6">
     
     {{-- Header --}}
-    <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-xl overflow-hidden no-print">
         <div class="px-5 py-6 md:px-7 md:py-7">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="text-white">
@@ -208,8 +264,8 @@
     </div>
 
     {{-- Statistik Card --}}
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="stat-card bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 no-print">
+        <div class="stat-card bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg" onclick="filterByStatus('')">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-white/80">Total Pendaftar</p>
@@ -220,7 +276,7 @@
                 </div>
             </div>
         </div>
-        <div class="stat-card bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl shadow-lg">
+        <div class="stat-card bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl shadow-lg" onclick="filterByStatus('accepted')">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-white/80">Diterima</p>
@@ -231,7 +287,7 @@
                 </div>
             </div>
         </div>
-        <div class="stat-card bg-gradient-to-br from-yellow-500 to-orange-500 text-white p-4 rounded-xl shadow-lg">
+        <div class="stat-card bg-gradient-to-br from-yellow-500 to-orange-500 text-white p-4 rounded-xl shadow-lg" onclick="filterByStatus('cadangan')">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-white/80">Cadangan</p>
@@ -242,7 +298,7 @@
                 </div>
             </div>
         </div>
-        <div class="stat-card bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl shadow-lg">
+        <div class="stat-card bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl shadow-lg" onclick="filterByStatus('rejected')">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-white/80">Ditolak</p>
@@ -261,11 +317,11 @@
             <div class="filter-group">
                 <div class="filter-input">
                     <label><i class="fa-regular fa-user text-accent mr-1"></i> Cari Nama Siswa</label>
-                    <input type="text" name="search" placeholder="Ketik nama siswa..." value="{{ request('search') }}">
+                    <input type="text" name="search" id="searchInput" placeholder="Ketik nama siswa..." value="{{ request('search') }}">
                 </div>
                 <div class="filter-input">
                     <label><i class="fa-solid fa-filter text-accent mr-1"></i> Status</label>
-                    <select name="status">
+                    <select name="status" id="statusSelect">
                         <option value="">Semua Status</option>
                         <option value="accepted" {{ request('status') == 'accepted' ? 'selected' : '' }}>Diterima</option>
                         <option value="cadangan" {{ request('status') == 'cadangan' ? 'selected' : '' }}>Cadangan</option>
@@ -275,11 +331,11 @@
                 </div>
                 <div class="filter-input">
                     <label><i class="fa-regular fa-calendar text-accent mr-1"></i> Tanggal Pendaftaran</label>
-                    <input type="date" name="tanggal" value="{{ request('tanggal') }}">
+                    <input type="date" name="tanggal" id="tanggalInput" value="{{ request('tanggal') }}">
                 </div>
                 <div class="filter-input">
-                    <label><i class="fa-solid fa-road text-accent mr-1"></i> Jalur</label>
-                    <select name="jalur">
+                    <label><i class="fa-solid fa-road text-accent mr-1"></i> Jalur Pendaftaran</label>
+                    <select name="jalur" id="jalurSelect">
                         <option value="">Semua Jalur</option>
                         <option value="reguler" {{ request('jalur') == 'reguler' ? 'selected' : '' }}>Reguler</option>
                         <option value="prestasi" {{ request('jalur') == 'prestasi' ? 'selected' : '' }}>Prestasi</option>
@@ -290,7 +346,7 @@
                 <div class="filter-input" style="flex: 0 0 auto;">
                     <label>&nbsp;</label>
                     <div class="flex gap-2">
-                        <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-accent to-orange-500 text-white rounded-xl hover:shadow-lg transition-all font-semibold text-sm flex items-center gap-2">
+                        <button type="submit" id="filterBtn" class="px-5 py-2.5 bg-gradient-to-r from-accent to-orange-500 text-white rounded-xl hover:shadow-lg transition-all font-semibold text-sm flex items-center gap-2">
                             <i class="fa-solid fa-magnifying-glass"></i> Filter
                         </button>
                         <a href="{{ route('admin.laporan.index') }}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all font-medium text-sm flex items-center gap-2">
@@ -303,26 +359,21 @@
     </div>
 
     {{-- Tombol Export & Print --}}
-    <div class="flex flex-wrap justify-between items-center gap-3 no-print">
-        <div class="text-sm text-gray-500">
-            <i class="fa-regular fa-chart-line text-accent"></i> Menampilkan {{ $pendaftars->firstItem() ?? 0 }} - {{ $pendaftars->lastItem() ?? 0 }} dari {{ $pendaftars->total() ?? 0 }} data
-        </div>
-        <div class="flex gap-2">
-            <button onclick="exportToExcel()" class="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all flex items-center gap-2 text-sm font-medium">
-                <i class="fa-solid fa-file-excel"></i> Export Excel
-            </button>
-            <button onclick="printLaporan()" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition-all flex items-center gap-2 text-sm font-medium">
-                <i class="fa-solid fa-print"></i> Cetak Laporan
-            </button>
-        </div>
+    <div class="flex flex-wrap justify-end gap-3 no-print">
+        <button onclick="printReport()" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition-all flex items-center gap-2 text-sm font-medium shadow-md">
+            <i class="fa-solid fa-print"></i> Cetak Laporan
+        </button>
+        <button onclick="exportToExcel()" class="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all flex items-center gap-2 text-sm font-medium shadow-md">
+            <i class="fa-solid fa-file-excel"></i> Export Excel
+        </button>
     </div>
 
-    {{-- AREA CETAK / PRINT --}}
+    {{-- AREA CETAK / PRINT - Tampilan Bersih --}}
     <div id="print-area">
         <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
-            {{-- Kop Surat untuk Cetak --}}
+            {{-- Kop Surat --}}
             <div class="text-center py-6 border-b border-gray-200" id="kop-surat">
-                <img src="/logo.webp" alt="Logo SMAN 1 Batang Gasan" class="h-16 mx-auto mb-3">
+                <img src="/logo.webp" alt="Logo SMAN 1 Batang Gasan" class="h-16 mx-auto mb-3" onerror="this.style.display='none'">
                 <h2 class="text-xl font-bold text-primary">SMAN 1 BATANG GASAN</h2>
                 <p class="text-sm text-gray-600">Jl. Pariaman - Tiku KM. 26, Sungai Sarik Malai V Suku, Kec. Batang Gasan, Kab. Padang Pariaman, Sumatera Barat 25562</p>
                 <p class="text-xs text-gray-500 mt-1">Email: info@sman1batanggasan.sch.id | Telp: (0752) 12345</p>
@@ -331,19 +382,34 @@
                 <p class="text-sm text-gray-600">TAHUN AJARAN 2026/2027</p>
                 <div class="mt-2 text-xs text-gray-500">
                     Tanggal Cetak: {{ date('d F Y H:i:s') }}
-                    @if(request('search') || request('status') || request('tanggal') || request('jalur'))
-                        <br>Filter: 
-                        @if(request('search')) Nama: {{ request('search') }} | @endif
-                        @if(request('status')) Status: {{ request('status') }} | @endif
-                        @if(request('tanggal')) Tgl: {{ request('tanggal') }} | @endif
-                        @if(request('jalur')) Jalur: {{ request('jalur') }} @endif
-                    @endif
+                </div>
+            </div>
+            
+            {{-- Informasi Laporan & Jadwal --}}
+            <div class="px-5 py-4 bg-gray-50 border-b border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p><i class="fa-regular fa-chart-line mr-2"></i><strong>Periode Laporan:</strong> {{ date('F Y') }}</p>
+                        <p><i class="fa-regular fa-users mr-2"></i><strong>Total Pendaftar:</strong> {{ $totalPendaftar ?? 0 }} Orang</p>
+                        <p><i class="fa-regular fa-circle-check mr-2 text-green-500"></i><strong>Diterima:</strong> {{ $totalDiterima ?? 0 }} Orang</p>
+                        <p><i class="fa-solid fa-clock mr-2 text-yellow-500"></i><strong>Cadangan:</strong> {{ $totalCadangan ?? 0 }} Orang</p>
+                        <p><i class="fa-regular fa-circle-xmark mr-2 text-red-500"></i><strong>Ditolak:</strong> {{ $totalDitolak ?? 0 }} Orang</p>
+                    </div>
+                    <div>
+                        <p><i class="fa-regular fa-calendar mr-2"></i><strong>Jadwal PPDB 2026/2027:</strong></p>
+                        <ul class="list-disc list-inside text-xs text-gray-600 mt-1 space-y-1">
+                            <li>📅 Pendaftaran: 10 Jan - 28 Feb 2026</li>
+                            <li>📋 Verifikasi Berkas: 1 - 5 Maret 2026</li>
+                            <li>📢 Pengumuman: 20 Maret 2026</li>
+                            <li>📝 Daftar Ulang: 21 - 25 Maret 2026</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             
             {{-- Tabel Data --}}
             <div class="table-container p-5">
-                <table class="laporan-table">
+                <table class="laporan-table" id="data-table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -352,20 +418,20 @@
                             <th>Jalur</th>
                             <th>Jenis Kelamin</th>
                             <th>Asal Sekolah</th>
-                            <th>Tanggal Daftar</th>
+                            <th>Tgl Daftar</th>
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="table-body">
                         @forelse ($pendaftars as $index => $pendaftar)
                         <tr>
                             <td data-label="No">{{ $loop->iteration }}</td>
                             <td data-label="NISN">{{ $pendaftar->siswa->nisn ?? '-' }}</td>
-                            <td data-label="Nama Lengkap" class="font-medium">{{ $pendaftar->user->name ?? '-' }}</td>
+                            <td data-label="Nama" class="font-medium">{{ $pendaftar->user->name ?? '-' }}</td>
                             <td data-label="Jalur">{{ ucfirst($pendaftar->jalur ?? '-') }}</td>
-                            <td data-label="Jenis Kelamin">{{ $pendaftar->siswa->jenis_kelamin ?? '-' }}</td>
+                            <td data-label="JK">{{ $pendaftar->siswa->jenis_kelamin ?? '-' }}</td>
                             <td data-label="Asal Sekolah">{{ $pendaftar->siswa->asal_sekolah ?? '-' }}</td>
-                            <td data-label="Tanggal Daftar">{{ $pendaftar->created_at ? $pendaftar->created_at->format('d/m/Y') : '-' }}</td>
+                            <td data-label="Tgl Daftar">{{ $pendaftar->created_at ? $pendaftar->created_at->format('d/m/Y') : '-' }}</td>
                             <td data-label="Status">
                                 @php
                                     $statusMap = [
@@ -381,7 +447,7 @@
                                     {{ $status['text'] }}
                                 </span>
                             </td>
-                        </tr>
+                        </table>
                         @empty
                             <tr>
                                 <td colspan="8" class="text-center py-8 text-gray-500">
@@ -394,19 +460,19 @@
                 </table>
             </div>
             
-            {{-- Footer Laporan untuk Cetak --}}
+            {{-- Footer Laporan dengan Tanda Tangan Kepala Sekolah (Nama & NIP bisa diedit) --}}
             <div class="px-5 py-4 border-t border-gray-200 text-sm">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-gray-500">Dicetak oleh: {{ Auth::user()->name ?? 'Admin' }}</p>
-                        <p class="text-gray-500 text-xs mt-1">Sistem Informasi PPDB SMAN 1 Batang Gasan</p>
-                    </div>
-                    <div class="text-center">
+                <div class="flex justify-end">
+                    <div class="text-center" style="min-width: 250px;">
                         <p class="text-gray-500">Padang Pariaman, {{ date('d F Y') }}</p>
-                        <p class="font-bold mt-4">Kepala SMAN 1 Batang Gasan</p>
-                        <div class="mt-8">
-                            <p class="font-bold">Drs. Ahmad Fauzi, M.Pd.</p>
-                            <p class="text-xs text-gray-500">NIP. 19651231 199003 1 123</p>
+                        <p class="font-bold mt-6">Kepala SMAN 1 Batang Gasan</p>
+                        <div class="mt-6">
+                            <p id="kepala-sekolah-name" class="font-bold text-primary editable-field" onclick="editKepalaSekolah()">
+                                Drs. Ahmad Fauzi, M.Pd.
+                            </p>
+                            <p id="kepala-sekolah-nip" class="text-xs text-gray-500 editable-field" onclick="editNIP()">
+                                NIP. 19651231 199003 1 123
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -423,12 +489,103 @@
 </div>
 
 <script>
-    // Fungsi Cetak Laporan
-    function printLaporan() {
-        const printContent = document.getElementById('print-area').innerHTML;
-        const originalTitle = document.title;
+    // Storage keys
+    const STORAGE_NAME_KEY = 'kepala_sekolah_name';
+    const STORAGE_NIP_KEY = 'kepala_sekolah_nip';
+    
+    // Load saved data
+    function loadKepalaSekolahData() {
+        const savedName = localStorage.getItem(STORAGE_NAME_KEY);
+        const savedNip = localStorage.getItem(STORAGE_NIP_KEY);
+        if (savedName) {
+            document.getElementById('kepala-sekolah-name').innerText = savedName;
+        }
+        if (savedNip) {
+            document.getElementById('kepala-sekolah-nip').innerHTML = savedNip;
+        }
+    }
+    
+    // Edit Nama Kepala Sekolah
+    function editKepalaSekolah() {
+        const nameElement = document.getElementById('kepala-sekolah-name');
+        const currentName = nameElement.innerText;
         
-        // Buat window baru untuk print
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentName;
+        input.className = 'edit-input';
+        input.style.fontWeight = 'bold';
+        input.style.fontSize = '14px';
+        input.style.width = '250px';
+        
+        nameElement.innerHTML = '';
+        nameElement.appendChild(input);
+        input.focus();
+        
+        const saveName = () => {
+            const newName = input.value.trim();
+            if (newName) {
+                nameElement.innerText = newName;
+                localStorage.setItem(STORAGE_NAME_KEY, newName);
+            } else {
+                nameElement.innerText = currentName;
+            }
+            nameElement.setAttribute('onclick', 'editKepalaSekolah()');
+        };
+        
+        input.addEventListener('blur', saveName);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') saveName();
+        });
+        nameElement.removeAttribute('onclick');
+    }
+    
+    // Edit NIP Kepala Sekolah
+    function editNIP() {
+        const nipElement = document.getElementById('kepala-sekolah-nip');
+        const currentNip = nipElement.innerText;
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentNip.replace('NIP. ', '');
+        input.className = 'edit-input';
+        input.style.fontSize = '12px';
+        input.style.width = '200px';
+        
+        nipElement.innerHTML = '';
+        nipElement.appendChild(input);
+        input.focus();
+        
+        const saveNip = () => {
+            const newNip = input.value.trim();
+            if (newNip) {
+                nipElement.innerText = 'NIP. ' + newNip;
+                localStorage.setItem(STORAGE_NIP_KEY, 'NIP. ' + newNip);
+            } else {
+                nipElement.innerText = currentNip;
+            }
+            nipElement.setAttribute('onclick', 'editNIP()');
+        };
+        
+        input.addEventListener('blur', saveNip);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') saveNip();
+        });
+        nipElement.removeAttribute('onclick');
+    }
+    
+    // Filter by status
+    function filterByStatus(status) {
+        const statusSelect = document.getElementById('statusSelect');
+        if (statusSelect) {
+            statusSelect.value = status;
+            document.getElementById('filterForm').submit();
+        }
+    }
+    
+    // Cetak Laporan
+    function printReport() {
+        const printContent = document.getElementById('print-area').innerHTML;
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
             <!DOCTYPE html>
@@ -437,60 +594,13 @@
                 <title>Laporan PPDB SMAN 1 Batang Gasan</title>
                 <meta charset="UTF-8">
                 <style>
-                    body {
-                        font-family: 'Times New Roman', Arial, sans-serif;
-                        margin: 0;
-                        padding: 20px;
-                        background: white;
-                    }
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 15px;
-                    }
-                    th, td {
-                        border: 1px solid #ddd;
-                        padding: 8px;
-                        text-align: center;
-                        font-size: 11px;
-                    }
-                    th {
-                        background: #374151;
-                        color: white;
-                        font-weight: bold;
-                    }
-                    .badge-status {
-                        display: inline-block;
-                        padding: 2px 8px;
-                        border-radius: 20px;
-                        font-size: 10px;
-                        font-weight: bold;
-                        color: white;
-                    }
-                    .badge-diterima { background: #10B981; }
-                    .badge-cadangan { background: #F59E0B; }
-                    .badge-ditolak { background: #EF4444; }
-                    .badge-menunggu { background: #6B7280; }
-                    .header {
-                        text-align: center;
-                        margin-bottom: 20px;
-                    }
-                    .header img {
-                        height: 60px;
-                        margin-bottom: 10px;
-                    }
-                    .footer {
-                        margin-top: 30px;
-                        font-size: 11px;
-                    }
-                    @page {
-                        size: landscape;
-                        margin: 1.5cm;
-                    }
-                    @media print {
-                        body { margin: 0; padding: 0; }
-                        .no-print { display: none; }
-                    }
+                    body { font-family: 'Times New Roman', Arial, sans-serif; margin: 0; padding: 20px; background: white; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                    th, td { border: 1px solid #000; padding: 8px; text-align: center; font-size: 11px; }
+                    th { background: #e0e0e0; font-weight: bold; }
+                    .badge-status { border: 1px solid #000; background: transparent; color: black; padding: 2px 8px; border-radius: 20px; }
+                    .editable-field { cursor: default; }
+                    @page { size: landscape; margin: 1.5cm; }
                 </style>
             </head>
             <body>
@@ -504,32 +614,27 @@
         printWindow.close();
     }
     
-    // Fungsi Export ke Excel
+    // Export ke Excel
     function exportToExcel() {
-        const table = document.querySelector('#print-area table');
+        const table = document.querySelector('#data-table');
         const kop = document.querySelector('#kop-surat').cloneNode(true);
+        const infoLaporan = document.querySelector('.bg-gray-50').cloneNode(true);
         const footer = document.querySelector('#print-area .border-t').cloneNode(true);
-        
-        // Sembunyikan badge untuk export
-        const badges = table.querySelectorAll('.badge-status');
-        badges.forEach(badge => {
-            badge.style.border = 'none';
-            badge.style.padding = '2px 8px';
-        });
         
         let htmlContent = `
             <html>
             <head>
                 <meta charset="UTF-8">
-                <title>Laporan_PPDB_SMAN1_Batang_Gasan.xls</title>
+                <title>Laporan_PPDB_SMAN1_Batang_Gasan</title>
                 <style>
                     th { background: #374151; color: white; padding: 8px; }
-                    td { padding: 6px; }
+                    td { padding: 6px; border: 1px solid #ddd; }
                     table { border-collapse: collapse; width: 100%; }
                 </style>
             </head>
             <body>
                 ${kop.outerHTML}
+                ${infoLaporan.outerHTML}
                 ${table.outerHTML}
                 ${footer.outerHTML}
             </body>
@@ -540,18 +645,34 @@
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.href = url;
-        link.download = 'Laporan_PPDB_SMAN1_Batang_Gasan_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.xls';
+        const dateStr = new Date().toISOString().slice(0,19).replace(/:/g, '-');
+        link.download = `Laporan_PPDB_SMAN1_Batang_Gasan_${dateStr}.xls`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     }
     
-    // Auto submit filter on change
+    // Auto submit filter dengan debounce
+    let debounceTimer;
     document.querySelectorAll('select[name="status"], select[name="jalur"], input[name="tanggal"]').forEach(el => {
-        el.addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
+        el.addEventListener('change', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => document.getElementById('filterForm').submit(), 300);
         });
     });
+    
+    // Search debounce
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        let searchTimer;
+        searchInput.addEventListener('keyup', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => document.getElementById('filterForm').submit(), 500);
+        });
+    }
+    
+    // Load saved data
+    loadKepalaSekolahData();
 </script>
 @endsection
