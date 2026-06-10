@@ -128,12 +128,41 @@
     }
     .modal-container {
         animation: modalSlideIn 0.3s ease-out;
-        max-width: 550px;
+        max-width: 600px;
         width: 90%;
+        max-height: 85vh;
+        overflow-y: auto;
     }
     @keyframes modalSlideIn {
         from { opacity: 0; transform: scale(0.95) translateY(-20px); }
         to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    /* Form group */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input, .form-group textarea {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+        outline: none;
+        border-color: #F59E0B;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        background: white;
     }
     
     /* Responsive */
@@ -265,7 +294,7 @@
         
         {{-- Tombol Export & Print --}}
         <div class="flex flex-wrap justify-between items-center gap-3 mt-5 pt-3 border-t border-gray-100">
-            <div class="text-sm text-gray-500"><i class="fa-regular fa-chart-line text-accent"></i> Menampilkan {{ $pendaftars->firstItem() ?? 0 }} - {{ $pendaftars->lastItem() ?? 0 }} dari {{ $pendaftars->total() ?? 0 }} data</div>
+            <div class="text-sm text-gray-500"><i class="fa-regular fa-chart-line text-accent"></i> Menampilkan {{ $pendaftars->firstItem() ?? 0 }} - {{ $pendaftars->lastItem() ?? 0 }} dari {{ $pendaftars->total() ?? 0 }}</div>
             <div class="flex flex-wrap gap-2">
                 <button onclick="openEditModal()" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition flex items-center gap-2 text-sm font-medium"><i class="fa-regular fa-pen-to-square"></i> Edit Laporan</button>
                 <button onclick="printReport()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2 text-sm font-medium"><i class="fa-solid fa-print"></i> Cetak</button>
@@ -317,7 +346,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="text-center py-8 text-gray-500">Tidak ada data pendaftar</td></tr>
+                            <td><td colspan="7" class="text-center py-8 text-gray-500">Tidak ada data pendaftar</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -325,12 +354,15 @@
             
             <div class="px-5 py-4 border-t border-gray-200 text-sm" id="footer-signature">
                 <div class="flex justify-end">
-                    <div class="text-center" style="min-width: 250px;">
+                    <div class="text-center" style="min-width: 280px;">
                         <p class="text-gray-500">Padang Pariaman, {{ date('d F Y') }}</p>
-                        <p class="font-bold mt-6">Kepala SMAN 1 Batang Gasan</p>
+                        <p class="font-bold mt-6" id="pejabat-label">Kepala SMAN 1 Batang Gasan</p>
                         <div class="mt-6">
-                            <p class="font-bold" id="kepsek-name">Drs. Ahmad Fauzi, M.Pd.</p>
+                            <p class="font-bold text-lg" id="kepsek-name">Drs. Ahmad Fauzi, M.Pd.</p>
                             <p class="text-xs text-gray-500" id="kepsek-nip">NIP. 19651231 199003 1 123</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gray-200">
+                            <p class="text-xs text-gray-400" id="cetak-oleh">Dicetak oleh: {{ Auth::user()->name ?? 'Admin' }}</p>
                         </div>
                     </div>
                 </div>
@@ -344,48 +376,70 @@
     @endif
 </div>
 
-{{-- Modal Edit Data Laporan --}}
+{{-- Modal Edit Data Laporan Lengkap --}}
 <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay" onclick="closeEditModal()">
     <div class="modal-container bg-white rounded-2xl shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
-        <div class="bg-gradient-to-r from-primary to-secondary px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i class="fa-regular fa-pen-to-square text-white"></i>
-                <h3 class="text-white font-bold text-lg">Edit Tampilan Laporan</h3>
+        <div class="bg-gradient-to-r from-primary to-secondary px-6 py-4 sticky top-0 z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-regular fa-pen-to-square text-white"></i>
+                    <h3 class="text-white font-bold text-lg">Edit Tampilan Laporan</h3>
+                </div>
+                <button onclick="closeEditModal()" class="text-white/80 hover:text-white text-2xl">&times;</button>
             </div>
-            <button onclick="closeEditModal()" class="text-white/80 hover:text-white text-2xl">&times;</button>
         </div>
-        <div class="p-6">
+        
+        <div class="p-6 max-h-[70vh] overflow-y-auto">
             <p class="text-sm text-gray-500 mb-4">Sesuaikan tampilan laporan sebelum dicetak atau diekspor.</p>
             
-            <div class="space-y-4">
-                <div class="border-b pb-3">
-                    <h4 class="font-semibold text-primary mb-2">⚙️ Komponen Laporan</h4>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="edit_header" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan Kop Surat (Header)</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="edit_filter_info" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan Informasi Filter</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="edit_footer" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan Tanda Tangan (Footer)</span></label>
-                    </div>
-                </div>
-                
-                <div class="border-b pb-3">
-                    <h4 class="font-semibold text-primary mb-2">📝 Teks Laporan</h4>
-                    <div class="space-y-3">
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Judul Laporan</label><input type="text" id="edit_title" value="LAPORAN PENERIMAAN PESERTA DIDIK BARU" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"></div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Nama Kepala Sekolah</label><input type="text" id="edit_kepsek" value="Drs. Ahmad Fauzi, M.Pd." class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"></div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">NIP Kepala Sekolah</label><input type="text" id="edit_nip" value="NIP. 19651231 199003 1 123" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"></div>
-                    </div>
-                </div>
-                
-                <div class="pt-2">
-                    <h4 class="font-semibold text-primary mb-2">🎨 Informasi Tambahan</h4>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Catatan Kaki (Opsional)</label><textarea id="edit_footer_note" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent" placeholder="Tambahkan catatan kaki jika diperlukan..."></textarea></div>
+            <!-- Komponen Laporan -->
+            <div class="border-b pb-4 mb-4">
+                <h4 class="font-semibold text-primary mb-3 flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Komponen Laporan</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50"><input type="checkbox" id="edit_header" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan Kop Surat</span></label>
+                    <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50"><input type="checkbox" id="edit_filter_info" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan Informasi Filter</span></label>
+                    <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50"><input type="checkbox" id="edit_footer" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan Tanda Tangan</span></label>
+                    <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50"><input type="checkbox" id="edit_cetak_oleh" checked class="w-4 h-4 text-accent rounded"><span class="text-sm">Tampilkan "Dicetak oleh"</span></label>
                 </div>
             </div>
             
-            <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition">Batal</button>
-                <button onclick="applyEditsAndProceed()" class="px-4 py-2 bg-accent text-white rounded-xl hover:bg-orange-600 transition flex items-center gap-2"><i class="fa-regular fa-floppy-disk"></i> Terapkan Perubahan</button>
+            <!-- Pejabat Penandatangan -->
+            <div class="border-b pb-4 mb-4">
+                <h4 class="font-semibold text-primary mb-3 flex items-center gap-2"><i class="fa-solid fa-user-tie"></i> Pejabat Penandatangan</h4>
+                <div class="space-y-3">
+                    <div class="form-group"><label>Jabatan Pejabat</label><input type="text" id="edit_pejabat_label" value="Kepala SMAN 1 Batang Gasan" class="w-full px-3 py-2 border rounded-lg"></div>
+                    <div class="form-group"><label>Nama Lengkap Pejabat</label><input type="text" id="edit_kepsek" value="Drs. Ahmad Fauzi, M.Pd." class="w-full px-3 py-2 border rounded-lg"></div>
+                    <div class="form-group"><label>NIP Pejabat</label><input type="text" id="edit_nip" value="NIP. 19651231 199003 1 123" class="w-full px-3 py-2 border rounded-lg"></div>
+                </div>
             </div>
+            
+            <!-- Informasi Pencetak -->
+            <div class="border-b pb-4 mb-4">
+                <h4 class="font-semibold text-primary mb-3 flex items-center gap-2"><i class="fa-solid fa-print"></i> Informasi Pencetak</h4>
+                <div class="space-y-3">
+                    <div class="form-group"><label>Nama Pencetak Laporan</label><input type="text" id="edit_cetak_nama" value="{{ Auth::user()->name ?? 'Admin' }}" class="w-full px-3 py-2 border rounded-lg"></div>
+                    <div class="form-group"><label>Posisi / Jabatan Pencetak</label><input type="text" id="edit_cetak_jabatan" value="Operator PPDB" class="w-full px-3 py-2 border rounded-lg"></div>
+                </div>
+            </div>
+            
+            <!-- Teks Laporan -->
+            <div class="border-b pb-4 mb-4">
+                <h4 class="font-semibold text-primary mb-3 flex items-center gap-2"><i class="fa-solid fa-heading"></i> Teks Laporan</h4>
+                <div class="space-y-3">
+                    <div class="form-group"><label>Judul Laporan</label><input type="text" id="edit_title" value="LAPORAN PENERIMAAN PESERTA DIDIK BARU" class="w-full px-3 py-2 border rounded-lg"></div>
+                </div>
+            </div>
+            
+            <!-- Catatan Kaki -->
+            <div class="pb-2">
+                <h4 class="font-semibold text-primary mb-3 flex items-center gap-2"><i class="fa-regular fa-note-sticky"></i> Catatan Kaki</h4>
+                <div class="form-group"><label>Catatan Tambahan (Opsional)</label><textarea id="edit_footer_note" rows="3" class="w-full px-3 py-2 border rounded-lg" placeholder="Tambahkan catatan kaki jika diperlukan..."></textarea></div>
+            </div>
+        </div>
+        
+        <div class="flex justify-end gap-3 p-4 border-t bg-gray-50 sticky bottom-0">
+            <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition">Batal</button>
+            <button onclick="applyEditsAndProceed()" class="px-4 py-2 bg-accent text-white rounded-xl hover:bg-orange-600 transition flex items-center gap-2"><i class="fa-regular fa-floppy-disk"></i> Terapkan Perubahan</button>
         </div>
     </div>
 </div>
@@ -406,6 +460,102 @@
         document.body.style.overflow = '';
     }
     
+    function saveToLocalStorage() {
+        const data = {
+            header: document.getElementById('edit_header').checked,
+            filterInfo: document.getElementById('edit_filter_info').checked,
+            footer: document.getElementById('edit_footer').checked,
+            showCetakOleh: document.getElementById('edit_cetak_oleh').checked,
+            pejabatLabel: document.getElementById('edit_pejabat_label').value,
+            kepsek: document.getElementById('edit_kepsek').value,
+            nip: document.getElementById('edit_nip').value,
+            cetakNama: document.getElementById('edit_cetak_nama').value,
+            cetakJabatan: document.getElementById('edit_cetak_jabatan').value,
+            title: document.getElementById('edit_title').value,
+            footerNote: document.getElementById('edit_footer_note').value
+        };
+        localStorage.setItem('laporan_ppdb_settings', JSON.stringify(data));
+    }
+    
+    function loadFromLocalStorage() {
+        const saved = localStorage.getItem('laporan_ppdb_settings');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (document.getElementById('edit_header')) document.getElementById('edit_header').checked = data.header !== false;
+                if (document.getElementById('edit_filter_info')) document.getElementById('edit_filter_info').checked = data.filterInfo !== false;
+                if (document.getElementById('edit_footer')) document.getElementById('edit_footer').checked = data.footer !== false;
+                if (document.getElementById('edit_cetak_oleh')) document.getElementById('edit_cetak_oleh').checked = data.showCetakOleh !== false;
+                if (document.getElementById('edit_pejabat_label')) document.getElementById('edit_pejabat_label').value = data.pejabatLabel || 'Kepala SMAN 1 Batang Gasan';
+                if (document.getElementById('edit_kepsek')) document.getElementById('edit_kepsek').value = data.kepsek || 'Drs. Ahmad Fauzi, M.Pd.';
+                if (document.getElementById('edit_nip')) document.getElementById('edit_nip').value = data.nip || 'NIP. 19651231 199003 1 123';
+                if (document.getElementById('edit_cetak_nama')) document.getElementById('edit_cetak_nama').value = data.cetakNama || '{{ Auth::user()->name ?? "Admin" }}';
+                if (document.getElementById('edit_cetak_jabatan')) document.getElementById('edit_cetak_jabatan').value = data.cetakJabatan || 'Operator PPDB';
+                if (document.getElementById('edit_title')) document.getElementById('edit_title').value = data.title || 'LAPORAN PENERIMAAN PESERTA DIDIK BARU';
+                if (document.getElementById('edit_footer_note')) document.getElementById('edit_footer_note').value = data.footerNote || '';
+            } catch(e) {}
+        }
+    }
+    
+    function applyEdits() {
+        const showHeader = document.getElementById('edit_header').checked;
+        const showFooter = document.getElementById('edit_footer').checked;
+        const showFilterInfo = document.getElementById('edit_filter_info').checked;
+        const showCetakOleh = document.getElementById('edit_cetak_oleh').checked;
+        const newTitle = document.getElementById('edit_title').value;
+        const newKepsek = document.getElementById('edit_kepsek').value;
+        const newNip = document.getElementById('edit_nip').value;
+        const newPejabatLabel = document.getElementById('edit_pejabat_label').value;
+        const newCetakNama = document.getElementById('edit_cetak_nama').value;
+        const newCetakJabatan = document.getElementById('edit_cetak_jabatan').value;
+        const footerNote = document.getElementById('edit_footer_note').value;
+        
+        const kopSurat = document.getElementById('kop-surat');
+        const footerSection = document.getElementById('footer-signature');
+        const filterInfo = document.getElementById('filter-info');
+        const titleElement = document.getElementById('laporan-title');
+        const kepsekElement = document.getElementById('kepsek-name');
+        const nipElement = document.getElementById('kepsek-nip');
+        const pejabatLabelElement = document.getElementById('pejabat-label');
+        const cetakOlehElement = document.getElementById('cetak-oleh');
+        
+        if (kopSurat) kopSurat.style.display = showHeader ? 'block' : 'none';
+        if (footerSection) footerSection.style.display = showFooter ? 'block' : 'none';
+        if (filterInfo) filterInfo.style.display = showFilterInfo ? 'block' : 'none';
+        if (titleElement && newTitle) titleElement.textContent = newTitle;
+        if (kepsekElement && newKepsek) kepsekElement.textContent = newKepsek;
+        if (nipElement && newNip) nipElement.textContent = newNip;
+        if (pejabatLabelElement && newPejabatLabel) pejabatLabelElement.textContent = newPejabatLabel;
+        
+        if (cetakOlehElement) {
+            if (showCetakOleh && newCetakNama) {
+                cetakOlehElement.innerHTML = `<i class="fa-regular fa-user mr-1"></i> Dicetak oleh: ${newCetakNama}${newCetakJabatan ? ' (' + newCetakJabatan + ')' : ''}`;
+                cetakOlehElement.style.display = 'block';
+            } else {
+                cetakOlehElement.style.display = 'none';
+            }
+        }
+        
+        let existingNote = document.getElementById('custom-footer-note');
+        if (footerNote) {
+            if (!existingNote) {
+                const footerContainer = document.querySelector('#print-area .border-t');
+                if (footerContainer) {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.id = 'custom-footer-note';
+                    noteDiv.className = 'text-center text-xs text-gray-400 mt-3 pt-2 border-t border-gray-100';
+                    noteDiv.innerHTML = footerNote;
+                    footerContainer.appendChild(noteDiv);
+                }
+            } else {
+                existingNote.innerHTML = footerNote;
+                existingNote.style.display = footerNote ? 'block' : 'none';
+            }
+        }
+        
+        saveToLocalStorage();
+    }
+    
     function applyEditsAndProceed() {
         applyEdits();
         closeEditModal();
@@ -416,48 +566,7 @@
         else Swal.fire({ title: 'Berhasil!', text: 'Tampilan laporan telah diperbarui', icon: 'success', timer: 1500, showConfirmButton: false });
     }
     
-    function applyEdits() {
-        const showHeader = document.getElementById('edit_header').checked;
-        const showFooter = document.getElementById('edit_footer').checked;
-        const showFilterInfo = document.getElementById('edit_filter_info').checked;
-        const newTitle = document.getElementById('edit_title').value;
-        const newKepsek = document.getElementById('edit_kepsek').value;
-        const newNip = document.getElementById('edit_nip').value;
-        const footerNote = document.getElementById('edit_footer_note').value;
-        
-        const kopSurat = document.getElementById('kop-surat');
-        const footerSection = document.getElementById('footer-signature');
-        const filterInfo = document.getElementById('filter-info');
-        const titleElement = document.getElementById('laporan-title');
-        const kepsekElement = document.getElementById('kepsek-name');
-        const nipElement = document.getElementById('kepsek-nip');
-        
-        if (kopSurat) kopSurat.style.display = showHeader ? 'block' : 'none';
-        if (footerSection) footerSection.style.display = showFooter ? 'block' : 'none';
-        if (filterInfo) filterInfo.style.display = showFilterInfo ? 'block' : 'none';
-        if (titleElement && newTitle) titleElement.textContent = newTitle;
-        if (kepsekElement && newKepsek) kepsekElement.textContent = newKepsek;
-        if (nipElement && newNip) nipElement.textContent = newNip;
-        
-        let existingNote = document.getElementById('custom-footer-note');
-        if (footerNote) {
-            if (!existingNote) {
-                const footerContainer = document.querySelector('#print-area .border-t');
-                if (footerContainer) {
-                    const noteDiv = document.createElement('div');
-                    noteDiv.id = 'custom-footer-note';
-                    noteDiv.className = 'text-center text-xs text-gray-400 mt-2 pt-2 border-t border-gray-100';
-                    noteDiv.innerHTML = footerNote;
-                    footerContainer.appendChild(noteDiv);
-                }
-            } else {
-                existingNote.innerHTML = footerNote;
-                existingNote.style.display = footerNote ? 'block' : 'none';
-            }
-        }
-    }
-    
-    function printReport() { pendingAction = 'print'; applyEdits(); window.print(); }
+    function printReport() { pendingAction = 'print'; applyEdits(); setTimeout(() => window.print(), 100); }
     
     function exportToExcel() {
         applyEdits();
@@ -501,5 +610,7 @@
     let searchTimeout; document.querySelector('input[name="search"]')?.addEventListener('keyup', function() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => document.getElementById('filterForm').submit(), 500); });
     
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeEditModal(); });
+    
+    loadFromLocalStorage();
 </script>
 @endsection
